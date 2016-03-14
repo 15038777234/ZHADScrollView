@@ -9,7 +9,7 @@
 #import "ZHADScrollView.h"
 
 @implementation ZHADScrollView {
-  
+    
     NSMutableArray *_bannerButtons;
     UIScrollView *_bannerScrollView;
     UIPageControl *_pageControll;
@@ -20,7 +20,7 @@
 }
 
 -(instancetype)initWithFrame:(CGRect)frame {
-
+    
     self =[super initWithFrame:frame];
     if (self) {
         [self _initView];
@@ -59,17 +59,17 @@
     
 }
 -(void)awakeFromNib {
-
+    
     [self _initView];
 }
 - (void)bannerSelect {
-
+    
     if (self.adScrollViewDidiClick) {
         self.adScrollViewDidiClick(self,_bannerIndex);
     }
 }
 - (void)reloadBannerView {
-
+    
     [_bannerTimer invalidate];
     for (UIButton *button in _bannerButtons) {
         [button removeFromSuperview];
@@ -103,7 +103,7 @@
         
         
     }else {
-    
+        
         UIButton *button = _bannerButtons[0];
         [button setBackgroundImage:self.bannerImages[0] forState:UIControlStateNormal];
     }
@@ -115,7 +115,7 @@
     if (buttonTag <1) {
         buttonTag ++;
     }else {
-    
+        
         buttonTag = 0;
     }
     _showButton = _bannerButtons[buttonTag];
@@ -125,7 +125,7 @@
         _bannerIndex = 0;
         _showButton.frame = self.bounds;
     }else {
-    
+        
         _showButton.frame =
         CGRectMake(_bannerScrollView.contentOffset.x+CGRectGetWidth(_bannerScrollView.frame),
                    _bannerScrollView.contentOffset.y,
@@ -140,7 +140,7 @@
     
 }
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-
+    
     CGFloat x=scrollView.contentOffset.x -(_bannerIndex)*CGRectGetWidth(self.frame);
     
     NSUInteger buttonTag = _showButton.tag;
@@ -164,7 +164,7 @@
     
 }
 -(void)setBannerImageUrls:(NSArray<NSString *> *)bannerImageUrls {
-
+    
     _bannerImageUrls = bannerImageUrls;
     [_bannerCacheImages removeAllObjects];
     __weak typeof(self) weakSelf =self;
@@ -179,21 +179,20 @@
                  [_bannerCacheImages addObject:image];
                  strongSelf.bannerImages = _bannerCacheImages;
                  [strongSelf reloadBannerView];
-            }];
+             }];
         }
     }
 }
 - (void)downloadImageFromUrl:(NSURL *)url complete:(void(^)(UIImage *image))complete {
-   
+    
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
         UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfURL:url]];
-        
         if (image) {
             dispatch_sync(dispatch_get_main_queue(), ^{
                 complete(image);
             });
         }
     });
-
+    
 }
 @end
